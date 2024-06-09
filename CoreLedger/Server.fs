@@ -19,6 +19,6 @@ let h: HttpBinding =
 
 let config: SuaveConfig = { defaultConfig with bindings = [ h ] }
 
-let helloWorld = {| Hello = "World" |} |> Json.serialize
+let helloWorld = {| Hello = "World"; Host = version () |} |> Json.serialize
 
 let basemap = (Successful.OK helloWorld)
