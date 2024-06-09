@@ -1,6 +1,7 @@
 # Jetbrains
 
 .idea/
+*DotSettings*
 
 # f sharp
 
