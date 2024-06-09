@@ -1,0 +1,9 @@
+# Jetbrains
+
+.idea/
+
+# f sharp
+
+**/bin
+**/obj
+
