@@ -29,7 +29,7 @@ To start our server now, using docker compose,
 docker compose up --scale api=2
 ```
 
-This brings up our api, with two duplicate instances. We round robin load balance between the two of them, using nginx and the network configured in the [docker-compose](./docker-compose.yml) file.
+This brings up our api, with two duplicate instances. We load balance between the two instances, based on the hash of the grouping id header. This is done using nginx and the network configured in the [docker-compose](./docker-compose.yml) file.
 
 ```shell
 curl --location '0.0.0.0:4000' --silent | jq
