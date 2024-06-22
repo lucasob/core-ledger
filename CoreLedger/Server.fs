@@ -2,23 +2,28 @@ module CoreLedger.Server
 
 open FSharp.Json
 open Suave
+open Suave.Operators
 open System
 open Suave.Sockets
 open System.Net
 
 let version () =
-    Environment.GetEnvironmentVariable "HOSTNAME"
+    let v = Environment.GetEnvironmentVariable "HOSTNAME"
+    if String.IsNullOrEmpty v then
+        "localhost"
+    else
+        v
 
-let s: SocketBinding =
-    { ip = IPAddress.Parse "0.0.0.0"
-      port = Port.Parse "8080" }
 
-let h: HttpBinding =
+let httpConfig =
     { scheme = Protocol.HTTP
-      socketBinding = s }
+      socketBinding =
+        { ip = IPAddress.Parse "0.0.0.0"
+          port = Port.Parse "8080" } }
 
-let config: SuaveConfig = { defaultConfig with bindings = [ h ] }
+let config = { defaultConfig with bindings = [ httpConfig ] }
 
-let helloWorld = {| Hello = "World"; Host = version () |} |> Json.serialize
+let health = {| Hello = "World"; Host = version () |} |> Json.serialize
 
-let basemap = (Successful.OK helloWorld)
+let webApp =
+    choose [ Filters.GET >=> choose [ Filters.path "/health" >=> Successful.OK health ] ]
