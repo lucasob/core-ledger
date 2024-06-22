@@ -9,14 +9,11 @@
     <ItemGroup>
         <Compile Include="Database.fs" />
         <Compile Include="Server.fs" />
-        <Compile Include="Program.fs"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
-      <Content Include="Dockerfile" />
+      <Compile Include="LedgerAccount.fs" />
+      <Compile Include="Program.fs" />
     </ItemGroup>
 
     <ItemGroup>
@@ -24,6 +21,13 @@
       <PackageReference Include="Npgsql" Version="8.0.3" />
       <PackageReference Include="Suave" Version="2.6.2" />
       <PackageReference Include="Suave.Testing" Version="2.2.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
+      <Content Include="Dockerfile" />
     </ItemGroup>
 
 </Project>

@@ -1,4 +1,6 @@
-﻿open Suave
+﻿module CoreLedger.Main
+
+open Suave
 open CoreLedger.Server
 
 [<EntryPoint>]

@@ -10,7 +10,7 @@
 
     <ItemGroup>
         <Compile Include="Tests.fs"/>
-        <Compile Include="QueryTest.fs" />
+        <Compile Include="LedgerAccountTest.fs" />
     </ItemGroup>
 
     <ItemGroup>
