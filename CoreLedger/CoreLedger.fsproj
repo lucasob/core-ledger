@@ -13,7 +13,7 @@
 
     <ItemGroup>
       <Compile Include="LedgerAccount.fs" />
-      <Compile Include="Program.fs" />
+      <Compile Include="Main.fs" />
     </ItemGroup>
 
     <ItemGroup>
