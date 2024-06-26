@@ -1,7 +1,9 @@
 module CoreLedgerTest.LedgerAccountTest
 
+open CoreLedger.Component.Core
+open CoreLedger.Database.Component
 open Xunit
-open CoreLedger.Database
+open CoreLedger.Core
 open CoreLedger.LedgerAccount
 
 [<Fact>]
@@ -15,8 +17,14 @@ let ``Inserting a new Ledger Account returns a value, and can be retrieved again
           minimumConnections = "4"
           maximumConnections = "4" }
     
-    let newLedgerAccount = insertAccount cfg |> Async.RunSynchronously
+    let newLedgerAccount, retrievedLedgerAccount =
+                async {
+                    let db = Database(cfg)
+                    (db :> Component<Database>).Start() |> ignore 
+                    let! newLedgerAccount = insertAccount (db.GetConnection())
+                    let! existingLedgerAccount = getAccountById (db.GetConnection()) newLedgerAccount.id
+                    return newLedgerAccount, existingLedgerAccount.Value
+                } |> Async.RunSynchronously
+
+    Assert.Equal(newLedgerAccount, retrievedLedgerAccount)
     
-    let existingLedgerAccount = getAccountById cfg newLedgerAccount.id |> Async.RunSynchronously
-    
-    Assert.Equal (newLedgerAccount, existingLedgerAccount.Value)

@@ -1,4 +1,4 @@
-module CoreLedger.Database
+module CoreLedger.Core
 
 open System.Data.Common
 open Npgsql
@@ -45,10 +45,9 @@ let rec readAllRows<'a> (reader: DbDataReader) (mapper: DbTypeMapper<'a>) acc =
 let readResults<'a> (reader: DbDataReader) (mapper: DbTypeMapper<'a>) =
     async { return! readAllRows reader mapper [] }
 
-let executeQuery<'a> (cfg: ConnectionConfig) (query: string) (mapper: DbTypeMapper<'a>) =
+let executeQuery<'a> (connection: NpgsqlConnection) (query: string) (mapper: DbTypeMapper<'a>) =
     async {
-        use! c = cfg.openConnection ()
-        use cmd = new NpgsqlCommand(query, c)
+        use cmd = new NpgsqlCommand(query, connection)
         use! reader = cmd.ExecuteReaderAsync()
         return! readResults reader mapper
     }

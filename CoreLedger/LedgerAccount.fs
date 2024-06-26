@@ -2,7 +2,8 @@ module CoreLedger.LedgerAccount
 
 open System
 open System.Data.Common
-open CoreLedger.Database
+open CoreLedger.Core
+open Npgsql
 
 type LedgerAccount =
     { id: Guid }
@@ -11,7 +12,7 @@ type LedgerAccount =
 let toLedgerAccount (reader: DbDataReader) =
     { id = reader.GetValue(0) |> string |> Guid }
 
-let insertAccount (connection: ConnectionConfig) =
+let insertAccount (connection: NpgsqlConnection) =
     async {
         let! result = executeQuery
                         connection
@@ -20,7 +21,7 @@ let insertAccount (connection: ConnectionConfig) =
         return List.head result
     }
     
-let getAccountById (connection: ConnectionConfig) (accountId: Guid) =
+let getAccountById (connection: NpgsqlConnection) (accountId: Guid) =
     async {
         let! result = executeQuery
                         connection
