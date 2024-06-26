@@ -25,9 +25,10 @@ type ConnectionConfig =
             .OpenAsync()
             .ContinueWith(fun task ->
                 if task.IsCompletedSuccessfully then
-                    connection
+                    Ok connection
                 else
-                    failwith "Unable to open connection")
+                    Error "Unable to open connection")
+        |> Async.AwaitTask
 
 type DbTypeMapper<'a> = DbDataReader -> 'a
 

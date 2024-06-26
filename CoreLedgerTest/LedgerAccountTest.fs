@@ -16,15 +16,23 @@ let ``Inserting a new Ledger Account returns a value, and can be retrieved again
           database = "service"
           minimumConnections = "4"
           maximumConnections = "4" }
-    
+
     let newLedgerAccount, retrievedLedgerAccount =
-                async {
-                    let db = Database(cfg)
-                    (db :> Component<Database>).Start() |> ignore 
-                    let! newLedgerAccount = insertAccount (db.GetConnection())
-                    let! existingLedgerAccount = getAccountById (db.GetConnection()) newLedgerAccount.id
-                    return newLedgerAccount, existingLedgerAccount.Value
-                } |> Async.RunSynchronously
+        async {
+            let! startedDatabase = (Database(cfg) :> Component<Database>).Start()
+
+            return! 
+                match startedDatabase with
+                | Ok database ->
+                    async {
+                        let db = database :?> Database
+                        let! newLedgerAccount = insertAccount (db.GetConnection())
+                        let! existingLedgerAccount = getAccountById (db.GetConnection()) newLedgerAccount.id
+                        return newLedgerAccount, existingLedgerAccount.Value
+                    }
+                | Error e ->
+                    let (StartupError f) = e
+                    failwith f
+        } |> Async.RunSynchronously
 
     Assert.Equal(newLedgerAccount, retrievedLedgerAccount)
-    
