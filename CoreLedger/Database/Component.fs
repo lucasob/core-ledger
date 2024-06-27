@@ -2,7 +2,6 @@ module CoreLedger.Database.Component
 
 open CoreLedger.Component.Core
 open CoreLedger.Core
-open Npgsql
 
 type Database(cfg: ConnectionConfig) =
 
@@ -22,7 +21,6 @@ type Database(cfg: ConnectionConfig) =
                         Ok(this :> Component<Database>)
                     | Error e -> Error(e |> StartupError)
             }
-
 
         member this.Stop() =
             async {

@@ -9,6 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <Compile Include="ComponentSupport.fs" />
         <Compile Include="ServerTests.fs" />
         <Compile Include="LedgerAccountTest.fs" />
     </ItemGroup>
