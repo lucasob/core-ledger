@@ -1,15 +1,13 @@
 module CoreLedgerTest.ComponentSupport
 
-open CoreLedger.Component.Core
 open CoreLedger.Database.Component
 
 let StartDatabase config =
     async {
-        let! startedDatabase = (Database(config) :> Component<Database>).Start()
+        let! startedDatabase = Database(config).Start()
         return match startedDatabase with
-                    | Ok database -> database :?> Database
-                    | Error (StartupError f) -> failwith f
+                | Ok database -> database
+                | Error f -> failwith f
     }
     
-let StopDatabase (db: Database) =
-    (db :> Component<Database>).Stop()
+let StopDatabase (db: Database) = db.Stop()

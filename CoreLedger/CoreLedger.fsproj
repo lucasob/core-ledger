@@ -18,7 +18,6 @@
         <Link>.dockerignore</Link>
       </Content>
       <Content Include="Dockerfile" />
-      <Compile Include="Component\Core.fs" />
       <Compile Include="Database\Types.fs" />
       <Compile Include="Database\Core.fs" />
       <Compile Include="Database\Component.fs" />
