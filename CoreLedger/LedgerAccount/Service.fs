@@ -9,14 +9,14 @@ open CoreLedger.Database.Core
 let private insertAccount (connection: NpgsqlConnection) =
     async {
         let! result =
-            ExecuteQuery connection "insert into ledger_accounts (id) values (DEFAULT) returning id" toLedgerAccount
+            ExecuteQuery connection "insert into ledger_accounts (id) values (DEFAULT) returning id, balance" toLedgerAccount
 
         return List.head result
     }
 
 let private getAccountById (connection: NpgsqlConnection) (accountId: Guid) =
     async {
-        let! result = ExecuteQuery connection $"select id from ledger_accounts where id = '{accountId}'" toLedgerAccount
+        let! result = ExecuteQuery connection $"select id, balance from ledger_accounts where id = '{accountId}'" toLedgerAccount
         return List.first result
     }
 

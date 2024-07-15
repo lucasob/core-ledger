@@ -1,0 +1,10 @@
+[environments.test]
+locations = ["filesystem:Migrations"]
+url = "jdbc:postgresql://localhost/service"
+user = "admin"
+password = "password"
+port = 5432
+
+[flyway]
+locations = ["filesystem:Migrations"]
+environment = "test"
