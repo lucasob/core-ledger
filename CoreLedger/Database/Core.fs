@@ -1,7 +1,8 @@
-module CoreLedger.Core
+module CoreLedger.Database.Core
 
-open System.Data.Common
 open Npgsql
+open System.Data.Common
+open CoreLedger.Database.Types
 
 type ConnectionConfig =
     { user: string
@@ -30,9 +31,7 @@ type ConnectionConfig =
                     Error "Unable to open connection")
         |> Async.AwaitTask
 
-type DbTypeMapper<'a> = DbDataReader -> 'a
-
-let rec readAllRows<'a> (reader: DbDataReader) (mapper: DbTypeMapper<'a>) acc =
+let rec private readAllRows<'a> (reader: DbDataReader) (mapper: Mapper<'a>) acc =
     async {
         let! hasMoreRows = reader.ReadAsync()
 
@@ -43,10 +42,10 @@ let rec readAllRows<'a> (reader: DbDataReader) (mapper: DbTypeMapper<'a>) acc =
             return List.rev acc
     }
 
-let readResults<'a> (reader: DbDataReader) (mapper: DbTypeMapper<'a>) =
+let private readResults<'a> (reader: DbDataReader) (mapper: Mapper<'a>) =
     async { return! readAllRows reader mapper [] }
 
-let executeQuery<'a> (connection: NpgsqlConnection) (query: string) (mapper: DbTypeMapper<'a>) =
+let ExecuteQuery<'a> (connection: NpgsqlConnection) (query: string) (mapper: Mapper<'a>) =
     async {
         use cmd = new NpgsqlCommand(query, connection)
         use! reader = cmd.ExecuteReaderAsync()

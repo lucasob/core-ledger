@@ -1,7 +1,7 @@
 module CoreLedger.Database.Component
 
 open CoreLedger.Component.Core
-open CoreLedger.Core
+open CoreLedger.Database.Core
 
 type Database(cfg: ConnectionConfig) =
 

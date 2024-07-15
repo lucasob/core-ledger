@@ -19,9 +19,11 @@
       </Content>
       <Content Include="Dockerfile" />
       <Compile Include="Component\Core.fs" />
+      <Compile Include="Database\Types.fs" />
       <Compile Include="Database\Core.fs" />
       <Compile Include="Database\Component.fs" />
-      <Compile Include="LedgerAccount.fs" />
+      <Compile Include="LedgerAccount\Core.fs" />
+      <Compile Include="LedgerAccount\Service.fs" />
       <Compile Include="Server.fs" />
       <Compile Include="Main.fs" />
     </ItemGroup>
