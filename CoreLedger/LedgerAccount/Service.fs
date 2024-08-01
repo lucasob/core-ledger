@@ -1,22 +1,21 @@
 module CoreLedger.LedgerAccount.Service
 
-open CoreLedger.Database.Component
-open CoreLedger.LedgerAccount.Core
-open Npgsql
 open System
+open CoreLedger.LedgerAccount.Core
 open CoreLedger.Database.Core
 
-let private insertAccount (connection: NpgsqlConnection) =
+let private insertAccount (db: Database) =
     async {
         let! result =
-            ExecuteQuery connection "insert into ledger_accounts (id) values (DEFAULT) returning id, balance" toLedgerAccount
+            ExecuteQuery db "insert into ledger_accounts (id) values (DEFAULT) returning id, balance" ToLedgerAccount
 
         return List.head result
     }
 
-let private getAccountById (connection: NpgsqlConnection) (accountId: Guid) =
+let private getAccountById (db: Database) (accountId: Guid) =
     async {
-        let! result = ExecuteQuery connection $"select id, balance from ledger_accounts where id = '{accountId}'" toLedgerAccount
+        let! connection = db.OpenConnection ()
+        let! result = ExecuteQuery db $"select id, balance from ledger_accounts where id = '{accountId}'" ToLedgerAccount
         return List.first result
     }
 
@@ -25,8 +24,5 @@ type Service =
       Insert: unit -> Async<LedgerAccount> }
 
 let New (db: Database) =
-    let g = getAccountById (db.GetConnection())
-    let i = fun () -> insertAccount (db.GetConnection())
-    
-    { GetById = g
-      Insert = i }
+    { GetById = getAccountById db
+      Insert = fun () -> insertAccount db }

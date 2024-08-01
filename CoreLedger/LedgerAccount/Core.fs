@@ -7,6 +7,6 @@ type LedgerAccount =
     { id: Guid
       balance: double }
 
-let toLedgerAccount (reader: DbDataReader) =
+let ToLedgerAccount (reader: DbDataReader) =
     { id = reader.GetValue(0) |> string |> Guid
       balance = reader.GetValue(1) |> string |> double }

@@ -3,7 +3,6 @@ module CoreLedgerTest.LedgerAccountTest
 open Xunit
 open CoreLedger.Database.Core
 open CoreLedger.LedgerAccount.Service
-open CoreLedgerTest.ComponentSupport
 
 [<Fact>]
 let ``Inserting a new Ledger Account returns a value, and can be retrieved again`` () =
@@ -18,15 +17,15 @@ let ``Inserting a new Ledger Account returns a value, and can be retrieved again
 
     let newLedgerAccount, retrievedLedgerAccount =
                 async {
-                    let! db = StartDatabase cfg
-                    let service = New db
+                    let db = Database cfg
+                    let ledgerAccountService = New db
                     
                     // Service under test
-                    let! newLedgerAccount = service.Insert ()
-                    let! existingLedgerAccount = service.GetById newLedgerAccount.id
+                    let! newLedgerAccount = ledgerAccountService.Insert ()
+                    let! existingLedgerAccount = ledgerAccountService.GetById newLedgerAccount.id
                     
                     // End
-                    let! _ = StopDatabase db
+                    let! _ = db.Stop()
                     return newLedgerAccount, existingLedgerAccount.Value
                 } |> Async.RunSynchronously
 
