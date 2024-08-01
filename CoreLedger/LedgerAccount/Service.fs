@@ -3,19 +3,22 @@ module CoreLedger.LedgerAccount.Service
 open System
 open CoreLedger.LedgerAccount.Core
 open CoreLedger.Database.Core
+open Npgsql
 
 let private insertAccount (db: Database) =
     async {
-        let! result =
-            ExecuteQuery db "insert into ledger_accounts (id) values (DEFAULT) returning id, balance" ToLedgerAccount
+        let queryString =
+            "insert into ledger_accounts (id) values (DEFAULT) returning id, balance"
 
+        let! result = ExecuteQuery db queryString [] ToLedgerAccount
         return List.head result
     }
 
 let private getAccountById (db: Database) (accountId: Guid) =
     async {
-        let! connection = db.OpenConnection ()
-        let! result = ExecuteQuery db $"select id, balance from ledger_accounts where id = '{accountId}'" ToLedgerAccount
+        let queryString = "select id, balance from ledger_accounts where id = @p1"
+        let parameters = [ NpgsqlParameter("@p1", accountId) ]
+        let! result = ExecuteQuery db queryString parameters ToLedgerAccount
         return List.first result
     }
 

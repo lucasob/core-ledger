@@ -68,7 +68,7 @@ let rec private readAllRows<'a> (reader: DbDataReader) (mapper: Mapper<'a>) acc 
 let private readResults<'a> (reader: DbDataReader) (mapper: Mapper<'a>) =
     async { return! readAllRows reader mapper [] }
 
-let ExecuteQuery<'a> (database: Database) (query: string) (mapper: Mapper<'a>) =
+let ExecuteQuery<'a> (database: Database) (query: string) (parameters: NpgsqlParameter list) (mapper: Mapper<'a>) =
     async {
         let! connection = database.OpenConnection()
 
@@ -77,6 +77,8 @@ let ExecuteQuery<'a> (database: Database) (query: string) (mapper: Mapper<'a>) =
             | Some conn ->
                 async {
                     use cmd = new NpgsqlCommand(query, conn)
+                    for parameter in parameters do
+                        cmd.Parameters.Add parameter |> ignore
                     use! reader = cmd.ExecuteReaderAsync()
                     return! readResults reader mapper
                 }
