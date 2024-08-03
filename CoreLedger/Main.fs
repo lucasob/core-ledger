@@ -40,8 +40,8 @@ let main _ =
         handleShutdown cancellationToken serverConfig.logger SignalSource.TERM)
 
     // Start the server asynchronously so we can control it
-    let _, server = startWebServerAsync serverConfig (Server.webService {||})
-    Async.Start(server, cancellationToken.Token)
+    let server = Server.Server(Server.Configuration, (Server.webService {||}))
+    server.Start(cancellationToken.Token)
 
     // I am not sure if this is best practice in fsharp, but it seems to make sense
     let pos = WaitHandle.WaitAny([| cancellationToken.Token.WaitHandle |])
