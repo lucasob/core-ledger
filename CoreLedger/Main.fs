@@ -5,6 +5,7 @@ open System.Threading
 open System.Runtime.Loader
 open Suave
 open Suave.Logging
+open CoreLedger
 open CoreLedger.HttpServer
 
 type SignalSource =
@@ -38,9 +39,12 @@ let main _ =
     // On sig-term (passed in from another process, or parent)
     AssemblyLoadContext.Default.add_Unloading (fun _ ->
         handleShutdown cancellationToken serverConfig.logger SignalSource.TERM)
+    
+    // Create our system
+    let system = System.New ()
 
     // Start the server asynchronously so we can control it
-    let server = Server.Server(Server.Configuration, (Server.webService {||}))
+    let server = Server.Server(Server.Configuration, (Server.webService system))
     server.Start(cancellationToken.Token)
 
     // I am not sure if this is best practice in fsharp, but it seems to make sense

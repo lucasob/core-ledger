@@ -3,10 +3,11 @@ module CoreLedger.HttpServer.Server
 open System.Threading
 open FSharp.Json
 open Suave
-open CoreLedger.HttpServer
 open Suave.Operators
 open Suave.Sockets
 open System.Net
+open CoreLedger.HttpServer
+open CoreLedger.System
 
 let httpConfig =
     { scheme = Protocol.HTTP
@@ -18,9 +19,9 @@ let Configuration =
     { defaultConfig with
         bindings = [ httpConfig ] }
 
-let webService _dependencies =
+let webService dependencies =
     choose [ Filters.path "/health" >=> choose [ Filters.GET >=> Successful.OK (Health.Get () |> Json.serialize) ]
-             Filters.path "/ledger-accounts" >=> choose [ Filters.POST >=> Successful.CREATED (Health.Get () |> Json.serialize) ]
+             Filters.path "/ledger-accounts" >=> choose [ Filters.POST >=> Successful.CREATED (LedgerAccounts.Create dependencies.LedgerAccountService) ]
              RequestErrors.NOT_FOUND "BAD"]
 
 type Server (configuration, app) =
