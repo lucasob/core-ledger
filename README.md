@@ -4,7 +4,7 @@ Hello! 🤠
 
 # What?
 
-This project aims to work towards offering a **_bare minimum_** double-entry accounting esque ledger.
+This project aims to work towards offering a **_bare minimum_** ledger.
 
 It exists purely to work through some concurrency control ideas.
 
@@ -53,6 +53,6 @@ hitting different containers.
 We make use of a couple of libraries within here, namely
 
 * [Npgsql](https://github.com/npgsql/npgsql) for postgres connections and data
-* [Expecto](https://github.com/haf/expecto) for F# flavoured testing
 * [suave.io](https://suave.io) for an F# flavoured web server
 * [suave testing](https://github.com/SuaveIO/suave) For testing suave
+* [Flyway](https://flywaydb.org) For database migrations
