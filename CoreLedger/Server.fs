@@ -26,4 +26,6 @@ let config = { defaultConfig with bindings = [ httpConfig ] }
 let health = {| Hello = "World"; Host = version () |} |> Json.serialize
 
 let webApp =
-    choose [ Filters.GET >=> choose [ Filters.path "/health" >=> Successful.OK health ] ]
+    choose [ Filters.GET >=> choose [ Filters.path "/health" >=> Successful.OK health ]
+             Filters.POST >=> choose [ Filters.path "/ledger-accounts" >=> Successful.CREATED health ]
+             RequestErrors.NOT_FOUND "BAD" ]

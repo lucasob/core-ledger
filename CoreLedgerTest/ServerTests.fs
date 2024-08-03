@@ -1,6 +1,5 @@
 module ServerTests
 
-open System
 open FSharp.Json
 open Xunit
 open CoreLedger.Server
