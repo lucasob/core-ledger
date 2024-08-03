@@ -2,18 +2,15 @@ module ServerTests
 
 open FSharp.Json
 open Xunit
-open CoreLedger.Server
+open CoreLedger.HttpServer
 open Suave.Testing
 open Suave
 
-type test = { Hello: string; Host: string }
-
 [<Fact>]
 let ``API can start, and responds on health endpoint`` () =
-    let ctx = runWith defaultConfig (webService {||})
+    let ctx = runWith defaultConfig (Server.webService {||})
     let res = req HttpMethod.GET "/health" None ctx
 
-    let responseBody = Json.deserialize<test> res
+    let responseBody = Json.deserialize<Health.Health> res
     
-    Expecto.Expect.equal responseBody.Hello "World" "Response body is correct"
     Expecto.Expect.isNotEmpty responseBody.Host "Some version is returned"

@@ -5,6 +5,7 @@ open System.Threading
 open System.Runtime.Loader
 open Suave
 open Suave.Logging
+open CoreLedger.HttpServer
 
 type SignalSource =
     | TERM
@@ -27,7 +28,7 @@ let main _ =
     let cancellationToken = new CancellationTokenSource()
 
     let serverConfig =
-        { Server.config with
+        { Server.Configuration with
             cancellationToken = cancellationToken.Token }
 
     // On ctrl-c (I don't think this runs in Docker)

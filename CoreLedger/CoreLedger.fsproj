@@ -22,7 +22,8 @@
       <Compile Include="Database\Core.fs" />
       <Compile Include="LedgerAccount\Core.fs" />
       <Compile Include="LedgerAccount\Service.fs" />
-      <Compile Include="Server.fs" />
+      <Compile Include="HttpServer\Health.fs" />
+      <Compile Include="HttpServer\Server.fs" />
       <Compile Include="Main.fs" />
     </ItemGroup>
 
