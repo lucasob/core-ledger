@@ -10,7 +10,7 @@ type test = { Hello: string; Host: string }
 
 [<Fact>]
 let ``API can start, and responds on health endpoint`` () =
-    let ctx = runWith defaultConfig webApp
+    let ctx = runWith defaultConfig (webService {||})
     let res = req HttpMethod.GET "/health" None ctx
 
     let responseBody = Json.deserialize<test> res

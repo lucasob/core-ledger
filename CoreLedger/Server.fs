@@ -9,10 +9,7 @@ open System.Net
 
 let version () =
     let v = Environment.GetEnvironmentVariable "HOSTNAME"
-    if String.IsNullOrEmpty v then
-        "localhost"
-    else
-        v
+    if String.IsNullOrEmpty v then "localhost" else v
 
 
 let httpConfig =
@@ -21,11 +18,13 @@ let httpConfig =
         { ip = IPAddress.Parse "0.0.0.0"
           port = Port.Parse "8080" } }
 
-let config = { defaultConfig with bindings = [ httpConfig ] }
+let config =
+    { defaultConfig with
+        bindings = [ httpConfig ] }
 
 let health = {| Hello = "World"; Host = version () |} |> Json.serialize
 
-let webApp =
-    choose [ Filters.GET >=> choose [ Filters.path "/health" >=> Successful.OK health ]
-             Filters.POST >=> choose [ Filters.path "/ledger-accounts" >=> Successful.CREATED health ]
-             RequestErrors.NOT_FOUND "BAD" ]
+let webService _dependencies =
+    choose [ Filters.path "/health" >=> choose [ Filters.GET >=> Successful.OK health ]
+             Filters.path "/ledger-accounts" >=> choose [ Filters.POST >=> Successful.CREATED health ]
+             RequestErrors.NOT_FOUND "BAD"]

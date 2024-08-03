@@ -10,7 +10,7 @@ open CoreLedger.Server
 
 [<Fact>]
 let ``POSTing to LedgerAccounts will create a new account`` () =
-    let _ctx = runWith config webApp
+    let _ctx = runWith config (webService {||})
 
     let requestBody =
         {| Hello = "World" |} |> Json.serialize |> System.Text.Encoding.UTF8.GetBytes
