@@ -80,7 +80,9 @@ let ExecuteQuery<'a> (database: Database) (query: string) (parameters: NpgsqlPar
                     for parameter in parameters do
                         cmd.Parameters.Add parameter |> ignore
                     use! reader = cmd.ExecuteReaderAsync()
-                    return! readResults reader mapper
+                    let! results = readResults reader mapper
+                    database.CloseConnection() |> ignore
+                    return results
                 }
             | None -> [] |> Async.result
     }
