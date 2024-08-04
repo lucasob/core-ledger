@@ -5,7 +5,7 @@ open CoreLedger.Database.Core
 let databaseConfiguration =
     { user = "admin"
       password = "password"
-      host = "localhost"
+      host = "db"
       port = 5432
       database = "service"
       minimumConnections = "4"
