@@ -27,6 +27,7 @@
       <Compile Include="HttpServer\LedgerAccounts.fs" />
       <Compile Include="HttpServer\Server.fs" />
       <Compile Include="Main.fs" />
+      <Content Include="Run\startup.fish" />
     </ItemGroup>
 
 </Project>
