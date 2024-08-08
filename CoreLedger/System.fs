@@ -2,7 +2,7 @@ module CoreLedger.System
 
 open CoreLedger.Database.Core
 
-let databaseConfiguration =
+let DatabaseConfiguration =
     { user = "admin"
       password = "password"
       host = "db"
@@ -15,8 +15,11 @@ type System =
     { Database: Database
       LedgerAccountService: LedgerAccount.Service.Service }
 
-let New () =
-    let database = Database(databaseConfiguration)
+type SystemConfig =
+    { DatabaseConfig: Database.Core.Configuration }
+
+let New config =
+    let database = Database(config.DatabaseConfig)
     let ledgerAccountService = LedgerAccount.Service.New(database)
 
     { Database = database

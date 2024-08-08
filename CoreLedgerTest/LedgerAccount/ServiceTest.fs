@@ -6,18 +6,10 @@ open CoreLedger.LedgerAccount
 
 [<Fact>]
 let ``Inserting a new Ledger Account returns a value, and can be retrieved again`` () =
-    
-    let cfg = { user = "admin"
-                password = "password"
-                host = "localhost"
-                port = 5432
-                database = "service"
-                minimumConnections = "4"
-                maximumConnections = "4" }
 
     let newLedgerAccount, retrievedLedgerAccount =
                 async {
-                    let db = Database cfg
+                    let db = Database TestConfiguration.DatabaseConfiguration
                     let ledgerAccountService = Service.New db
                     
                     // Service under test

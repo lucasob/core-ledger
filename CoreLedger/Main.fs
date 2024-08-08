@@ -15,12 +15,12 @@ type SignalSource =
 let handleShutdown (tokenSource: CancellationTokenSource) (logger: Logger) (source: SignalSource) =
     if not tokenSource.Token.IsCancellationRequested then
         logger.info (fun _ ->
-        { name = [| "User" |]
-          value = $"Shutdown initiated from {source}" |> Event
-          fields = Map [ ("a", "b") ]
-          timestamp = DateTime.timestamp DateTime.Now
-          level = LogLevel.Info })
-        
+            { name = [| "User" |]
+              value = $"Shutdown initiated from {source}" |> Event
+              fields = Map [ ("a", "b") ]
+              timestamp = DateTime.timestamp DateTime.Now
+              level = LogLevel.Info })
+
         tokenSource.Cancel()
 
 
@@ -33,15 +33,14 @@ let main _ =
             cancellationToken = cancellationToken.Token }
 
     // On ctrl-c (I don't think this runs in Docker)
-    Console.CancelKeyPress.Add(fun _ ->
-        handleShutdown cancellationToken serverConfig.logger SignalSource.INT)
+    Console.CancelKeyPress.Add(fun _ -> handleShutdown cancellationToken serverConfig.logger SignalSource.INT)
 
     // On sig-term (passed in from another process, or parent)
     AssemblyLoadContext.Default.add_Unloading (fun _ ->
         handleShutdown cancellationToken serverConfig.logger SignalSource.TERM)
-    
+
     // Create our system
-    let system = System.New ()
+    let system = System.New({ DatabaseConfig = System.DatabaseConfiguration })
 
     // Start the server asynchronously so we can control it
     let server = Server.Server(Server.Configuration, (Server.webService system))
